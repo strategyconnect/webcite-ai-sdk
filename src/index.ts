@@ -23,13 +23,15 @@ function citationsOf(response: Json): Json[] {
 
 /** One citation as the source URL, stance and the passage it is bound to. */
 export function summarizeCitation(citation: Json): Json {
-  const passage = (citation.passage as Json | undefined)?.text ?? citation.snippet;
+  const bound = (citation.passage as Json | undefined) ?? {};
+  const passage = bound.text ?? citation.snippet;
   const summary: Json = {
     id: citation.id,
     url: citation.url,
     title: citation.title,
     stance: citation.stance,
     passage,
+    passageSha256: bound.sha256,
   };
   return Object.fromEntries(Object.entries(summary).filter(([, v]) => v !== undefined && v !== null));
 }
@@ -96,15 +98,15 @@ export function extractDocumentTool(client: Webcite, options: { maxChars?: numbe
     }),
     execute: async ({ url }) => {
       const response = (await client.extract({ asset_url: url, ...(options.mode ? { mode: options.mode } : {}) })) as Json;
-      const markdown = String(response.markdown ?? '');
-      const truncated = markdown.length > maxChars;
+      const markdown = typeof response.markdown === 'string' ? response.markdown : undefined;
+      const truncated = markdown !== undefined && markdown.length > maxChars;
       const result: Json = {
         state: response.state,
         reason: response.reason ?? undefined,
         pages: usage(response).pages,
         credits: usage(response).credits,
         truncatedToChars: truncated ? maxChars : undefined,
-        markdown: truncated ? markdown.slice(0, maxChars) : markdown,
+        markdown: truncated ? markdown?.slice(0, maxChars) : markdown,
       };
       return Object.fromEntries(Object.entries(result).filter(([, v]) => v !== undefined && v !== null));
     },

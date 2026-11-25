@@ -39,6 +39,7 @@ test('verifyClaim returns the verdict and citations bound to passages', async ()
   assert.equal(out.citations[0].url, NASA);
   assert.equal(out.citations[0].stance, 'contradicts');
   assert.match(out.citations[0].passage, /isn't visible from the moon/);
+  assert.match(out.citations[0].passageSha256, /^8ae9e93f/);
   assert.deepEqual(Object.keys(bodies[0]?.body as object).includes('source_urls'), false);
 });
 
