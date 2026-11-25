@@ -1,0 +1,38 @@
+{
+  "name": "webcite-ai-sdk",
+  "version": "0.1.0",
+  "description": "Vercel AI SDK tools for Webcite: verify claims with citations bound to source passages, search sources, and parse documents to Markdown.",
+  "keywords": ["ai", "ai-sdk", "tools", "vercel-ai-sdk", "webcite", "claim-verification", "fact-checking", "citations", "pdf-to-markdown", "document-parsing"],
+  "homepage": "https://github.com/strategyconnect/webcite-ai-sdk#readme",
+  "repository": { "type": "git", "url": "git+https://github.com/strategyconnect/webcite-ai-sdk.git" },
+  "bugs": "https://github.com/strategyconnect/webcite-ai-sdk/issues",
+  "license": "MIT",
+  "author": "Webcite",
+  "type": "module",
+  "engines": { "node": ">=18" },
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" },
+    "./package.json": "./package.json"
+  },
+  "files": ["dist", "README.md", "LICENSE"],
+  "scripts": {
+    "build": "tsup src/index.ts --format esm --dts --clean",
+    "typecheck": "tsc --noEmit",
+    "test": "tsx --test test/*.test.ts",
+    "check": "npm run typecheck && npm test && npm run build",
+    "prepublishOnly": "npm run check"
+  },
+  "dependencies": { "webcite": "^0.1.0" },
+  "peerDependencies": { "ai": ">=5.0.0 <8.0.0", "zod": "^3.25.0 || ^4.0.0" },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "ai": "^7.0.0",
+    "tsup": "^8.5.0",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3",
+    "zod": "^4.0.0"
+  }
+}
